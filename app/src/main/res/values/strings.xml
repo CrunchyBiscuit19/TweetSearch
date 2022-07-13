@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TweetSearch</string>
+    <string name="upload_screenshot">Upload Screenshot</string>
+    <string name="local_tweet_screenshot">Local Tweet Screenshot</string>
+    <string name="url_tweet_screenshot">URL Tweet Screenshot</string>
+    <string name="select_tweet_screenshot_instruction">Select a screenshot of a tweet to search for.</string>
+    <string name="placeholder">Placeholder</string>
+    <string name="preview_screenshot">Preview Screenshot</string>
+    <string name="submit_url">Submit</string>
+</resources>
