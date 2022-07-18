@@ -3,8 +3,14 @@
     <string name="upload_screenshot">Upload Screenshot</string>
     <string name="local_tweet_screenshot">Local Tweet Screenshot</string>
     <string name="url_tweet_screenshot">URL Tweet Screenshot</string>
-    <string name="select_tweet_screenshot_instruction">Select a screenshot of a tweet to search for.</string>
+    <string name="select_tweet_screenshot_instruction">Select Screenshot</string>
     <string name="placeholder">Placeholder</string>
     <string name="preview_screenshot">Preview Screenshot</string>
     <string name="submit_url">Submit</string>
+    <string name="toolbar_tweet_screenshot">Tweet Screenshot</string>
+    <string name="confirm_screenshot">Confirm</string>
+    <string name="confirmed_screenshot_model">Confirmed screenshot</string>
+    <string name="screenshot_selected">Screenshot Selected</string>
+    <string name="image_not_found_error">Image cannot be found. Go back and try again.</string>
+    <string name="no_text_detected_error">Text cannot be detected. Go back and try again</string>
 </resources>

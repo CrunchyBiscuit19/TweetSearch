@@ -1,4 +1,4 @@
-package com.example.tweetsearch.generic
+package com.example.tweetsearch.reusable
 
 import androidx.compose.foundation.border
 import androidx.compose.material.*
@@ -37,7 +37,7 @@ fun AppToolbar(
             }
         },
         actions = {
-            IconButton(onClick = { /* TODO */ }) {
+            IconButton(onClick = { /* TODO Open Settings menu */ }) {
                 Icon(
                     Icons.Filled.Settings,
                     contentDescription = "Settings menu",
@@ -45,6 +45,5 @@ fun AppToolbar(
                 )
             }
         },
-        modifier = modifier.border(1.dp, MaterialTheme.colors.onBackground)
     )
 }
