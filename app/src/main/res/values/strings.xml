@@ -12,5 +12,7 @@
     <string name="confirmed_screenshot_model">Confirmed screenshot</string>
     <string name="screenshot_selected">Screenshot Selected</string>
     <string name="image_not_found_error">Image cannot be found. Go back and try again.</string>
-    <string name="no_text_detected_error">Text cannot be detected. Go back and try again</string>
+    <string name="cannot_detect_text_error">Text cannot be detected. Go back and try again</string>
+    <string name="no_text_detected_error">No text detected. Go back and try again.</string>
+    <string name="text_detection_card_title">Text Detection</string>
 </resources>

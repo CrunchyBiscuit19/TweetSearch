@@ -18,7 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.tweetsearch.Screen.*
 import com.example.tweetsearch.Screen.Companion.fromRoute
-import com.example.tweetsearch.reusable.AppToolbar
+import com.example.tweetsearch.component.AppToolbar
 import com.example.tweetsearch.tweetinfo.TweetInfoPage
 import com.example.tweetsearch.tweetpreview.TweetPreviewPage
 import com.example.tweetsearch.ui.theme.TweetSearchTheme

@@ -6,12 +6,21 @@ import android.net.Uri
 import android.webkit.URLUtil
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -21,9 +30,9 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.tweetsearch.R
-import com.example.tweetsearch.reusable.BodyText
-import com.example.tweetsearch.reusable.HeaderBodyText
-import com.example.tweetsearch.reusable.ErrorBodyText
+import com.example.tweetsearch.misc.RotationAngles
+import com.example.tweetsearch.reusable.*
+import com.example.tweetsearch.ui.theme.Shapes
 import com.example.tweetsearch.ui.theme.defaultModifier
 import com.example.tweetsearch.ui.theme.imageRoundCorners
 import com.google.mlkit.vision.common.InputImage
@@ -37,7 +46,7 @@ fun TweetInfoPage(modifier: Modifier = Modifier, screenshotModel: String?) {
         modifier = modifier
             .verticalScroll(rememberScrollState()),
     ) {
-        HeaderBodyText(stringResource(R.string.screenshot_selected))
+        HeaderBodyText(defaultModifier, stringResource(R.string.screenshot_selected))
         AsyncImage(
             model = screenshotModel,
             contentDescription = stringResource(R.string.confirmed_screenshot_model),
@@ -51,19 +60,24 @@ fun TweetInfoPage(modifier: Modifier = Modifier, screenshotModel: String?) {
         if (screenshotModel != null) {
             TweetOCR(modifier, screenshotModel)
         } else {
-            ErrorBodyText(stringResource(R.string.image_not_found_error))
+            ErrorBodyText(defaultModifier, stringResource(R.string.image_not_found_error))
         }
     }
 }
 
 @Composable
 fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
-    var isTweet by remember { mutableStateOf(false) }
+    var detectionResultsFold by remember { mutableStateOf(false) }
+    var arrowRotationAngle by remember { mutableStateOf(RotationAngles.DOWN.angle) }
+    arrowRotationAngle = when (detectionResultsFold) {
+        true -> RotationAngles.UP.angle
+        false -> RotationAngles.DOWN.angle
+    }
 
     val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     var screenshot: InputImage
-    var detectedText: String by remember { mutableStateOf("") }
-    var detectionError: Boolean by remember { mutableStateOf(false) }
+    var detectedText: String? by remember { mutableStateOf(null) }
+    var detectionError by remember { mutableStateOf(false) }
 
     if (URLUtil.isNetworkUrl(screenshotModel)) {
         val imageLoader = ImageLoader(LocalContext.current)
@@ -94,8 +108,26 @@ fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
             }
     }
 
-    BodyText(detectedText)
-    if (detectionError) {
-        ErrorBodyText(stringResource(R.string.no_text_detected_error))
-    }
+    ExpandableCard(
+        modifier = defaultModifier,
+        shape = Shapes.medium,
+        backgroundColor = MaterialTheme.colors.background,
+        elevation = 4.dp,
+        folded = detectionResultsFold,
+        onClick = { detectionResultsFold = !detectionResultsFold },
+        header = {
+            CardHeader(modifier, stringResource(R.string.text_detection_card_title), arrowRotationAngle)
+        },
+        content = {
+            if (detectedText == null) {
+                CircularProgressIndicator()
+            } else if (detectedText != "") {
+                BodyText(defaultModifier, detectedText!!)
+            } else if (detectedText == "") {
+                ErrorBodyText(defaultModifier, stringResource(R.string.no_text_detected_error))
+            } else if (detectionError) {
+                ErrorBodyText(defaultModifier, stringResource(R.string.cannot_detect_text_error))
+            }
+        }
+    )
 }

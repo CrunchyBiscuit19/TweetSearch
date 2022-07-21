@@ -23,7 +23,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.tweetsearch.R
 import com.example.tweetsearch.Screen.TweetInfo
-import com.example.tweetsearch.reusable.BodyText
 import com.example.tweetsearch.reusable.HeaderBodyText
 import com.example.tweetsearch.ui.theme.buttonRoundCorners
 import com.example.tweetsearch.ui.theme.defaultModifier
@@ -57,7 +56,10 @@ fun TweetPictureSelect(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
     ) {
-        HeaderBodyText(stringResource(R.string.select_tweet_screenshot_instruction))
+        HeaderBodyText(
+            defaultModifier,
+            stringResource(R.string.select_tweet_screenshot_instruction)
+        )
         OutlinedButton(
             onClick = {
                 selectedFileLauncher.launch("image/*")
@@ -123,7 +125,7 @@ fun TweetPicturePreview(
         validScreenshot = false
     }
 
-    HeaderBodyText(stringResource(R.string.preview_screenshot))
+    HeaderBodyText(defaultModifier, stringResource(R.string.preview_screenshot))
     AsyncImage(
         model = previewScreenshotModel,
         contentDescription = stringResource(R.string.preview_screenshot),

@@ -1,4 +1,4 @@
-package com.example.tweetsearch.reusable
+package com.example.tweetsearch.component
 
 import androidx.compose.foundation.border
 import androidx.compose.material.*

@@ -9,29 +9,29 @@ import com.example.tweetsearch.R
 import com.example.tweetsearch.ui.theme.defaultModifier
 
 @Composable
-fun BodyText (text: String) {
+fun BodyText (modifier: Modifier = Modifier, text: String) {
     Text(
         text,
         style = MaterialTheme.typography.subtitle1,
-        modifier = defaultModifier,
+        modifier = modifier,
     )
 }
 
 @Composable
-fun HeaderBodyText (text: String) {
+fun HeaderBodyText (modifier: Modifier = Modifier, text: String) {
     Text(
         text,
         style = MaterialTheme.typography.h6,
-        modifier = defaultModifier,
+        modifier = modifier,
     )
 }
 
 @Composable
-fun ErrorBodyText (text: String) {
+fun ErrorBodyText (modifier: Modifier = Modifier, text: String) {
     Text(
         text,
         style = MaterialTheme.typography.subtitle1,
         color = MaterialTheme.colors.error,
-        modifier = defaultModifier,
+        modifier = modifier,
     )
 }
