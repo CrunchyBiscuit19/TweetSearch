@@ -1,4 +1,4 @@
-package com.example.tweetsearch.tweetpreview
+package com.example.tweetsearch.screen
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -22,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.tweetsearch.R
-import com.example.tweetsearch.Screen.TweetInfo
 import com.example.tweetsearch.reusable.HeaderBodyText
 import com.example.tweetsearch.ui.theme.buttonRoundCorners
 import com.example.tweetsearch.ui.theme.defaultModifier
@@ -43,14 +43,14 @@ fun TweetPictureSelect(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    var previewScreenshotModel: String? by remember { mutableStateOf(null) }
+    var previewScreenshotModel: String? by rememberSaveable { mutableStateOf(null) }
     val selectedFileLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
                 previewScreenshotModel = uri.toString()
             }
         }
-    var screenshotUrl by remember { mutableStateOf("") }
+    var screenshotUrl by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -120,7 +120,7 @@ fun TweetPicturePreview(
     navController: NavController,
     previewScreenshotModel: String?,
 ) {
-    var validScreenshot by remember { mutableStateOf(false) }
+    var validScreenshot by rememberSaveable { mutableStateOf(false) }
     if (previewScreenshotModel == null) {
         validScreenshot = false
     }
@@ -141,7 +141,7 @@ fun TweetPicturePreview(
     OutlinedButton(
         onClick = {
             navController.navigate(
-                "${TweetInfo.name}/${
+                "${Screen.TweetInfo.name}/${
                     URLEncoder.encode(
                         previewScreenshotModel,
                         StandardCharsets.UTF_8.toString()

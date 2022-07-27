@@ -1,4 +1,4 @@
-package com.example.tweetsearch
+package com.example.tweetsearch.screen
 
 enum class Screen(
     val toolbarTitle: String
@@ -8,6 +8,9 @@ enum class Screen(
     ),
     TweetInfo(
         toolbarTitle = "Screenshot Info"
+    ),
+    Setting(
+        toolbarTitle = "Settings"
     );
 
     companion object {
@@ -15,6 +18,7 @@ enum class Screen(
             when (route?.substringBefore("/")) {
                 TweetPreview.name -> TweetPreview
                 TweetInfo.name -> TweetInfo
+                Setting.name -> Setting
                 null -> TweetPreview
                 else -> throw IllegalArgumentException("Route $route is not recognized.")
             }

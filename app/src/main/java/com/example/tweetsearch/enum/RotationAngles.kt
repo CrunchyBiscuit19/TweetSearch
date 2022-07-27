@@ -1,4 +1,4 @@
-package com.example.tweetsearch.misc
+package com.example.tweetsearch.enum
 
 enum class RotationAngles(
     val angle: Float

@@ -15,4 +15,10 @@
     <string name="cannot_detect_text_error">Text cannot be detected. Go back and try again</string>
     <string name="no_text_detected_error">No text detected. Go back and try again.</string>
     <string name="text_detection_card_title">Text Detection</string>
+    <string name="dark_mode_options_icon_description">Dark Mode Options</string>
+    <string name="dark_mode_setting_name">Dark Mode</string>
+    <string name="developer_credit">Created by Sim Yue Yang</string>
+    <string name="drawer_icon_description">Drawer menu</string>
+    <string name="settings_icon_description">Settings menu</string>
+    <string name="arrow_back_description">Go back</string>
 </resources>

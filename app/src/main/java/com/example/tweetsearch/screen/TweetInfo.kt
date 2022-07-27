@@ -1,4 +1,4 @@
-package com.example.tweetsearch.tweetinfo
+package com.example.tweetsearch.screen
 
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -6,21 +6,14 @@ import android.net.Uri
 import android.webkit.URLUtil
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -30,7 +23,7 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.tweetsearch.R
-import com.example.tweetsearch.misc.RotationAngles
+import com.example.tweetsearch.enum.RotationAngles
 import com.example.tweetsearch.reusable.*
 import com.example.tweetsearch.ui.theme.Shapes
 import com.example.tweetsearch.ui.theme.defaultModifier
@@ -67,8 +60,8 @@ fun TweetInfoPage(modifier: Modifier = Modifier, screenshotModel: String?) {
 
 @Composable
 fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
-    var detectionResultsFold by remember { mutableStateOf(false) }
-    var arrowRotationAngle by remember { mutableStateOf(RotationAngles.DOWN.angle) }
+    var detectionResultsFold by rememberSaveable { mutableStateOf(false) }
+    var arrowRotationAngle by rememberSaveable { mutableStateOf(RotationAngles.DOWN.angle) }
     arrowRotationAngle = when (detectionResultsFold) {
         true -> RotationAngles.UP.angle
         false -> RotationAngles.DOWN.angle
@@ -76,8 +69,8 @@ fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
 
     val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
     var screenshot: InputImage
-    var detectedText: String? by remember { mutableStateOf(null) }
-    var detectionError by remember { mutableStateOf(false) }
+    var detectedText: String? by rememberSaveable { mutableStateOf(null) }
+    var detectionError by rememberSaveable { mutableStateOf(false) }
 
     if (URLUtil.isNetworkUrl(screenshotModel)) {
         val imageLoader = ImageLoader(LocalContext.current)
@@ -116,7 +109,11 @@ fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
         folded = detectionResultsFold,
         onClick = { detectionResultsFold = !detectionResultsFold },
         header = {
-            CardHeader(modifier, stringResource(R.string.text_detection_card_title), arrowRotationAngle)
+            CardHeader(
+                modifier,
+                stringResource(R.string.text_detection_card_title),
+                arrowRotationAngle
+            )
         },
         content = {
             if (detectedText == null) {
