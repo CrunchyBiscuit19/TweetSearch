@@ -1,4 +1,4 @@
-package com.example.tweetsearch.component
+package com.example.tweetsearch.component.toolbar
 
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons

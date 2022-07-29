@@ -1,16 +1,19 @@
 package com.example.tweetsearch.screen
 
 enum class Screen(
-    val toolbarTitle: String
+    val toolbarTitle: String,
+    val accessedViaDrawer: Boolean = true
 ) {
     TweetPreview(
         toolbarTitle = "Select Screenshot"
     ),
     TweetInfo(
-        toolbarTitle = "Screenshot Info"
+        toolbarTitle = "Screenshot Info",
+        accessedViaDrawer = false
     ),
     Setting(
-        toolbarTitle = "Settings"
+        toolbarTitle = "Settings",
+        accessedViaDrawer = false
     );
 
     companion object {

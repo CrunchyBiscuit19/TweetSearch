@@ -1,4 +1,4 @@
-package com.example.tweetsearch.reusable
+package com.example.tweetsearch.component.generic
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text

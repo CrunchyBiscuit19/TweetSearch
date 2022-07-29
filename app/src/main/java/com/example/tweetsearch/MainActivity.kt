@@ -12,7 +12,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -21,22 +20,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
-import com.example.tweetsearch.component.AppToolbar
-import com.example.tweetsearch.component.SettingToolbar
+import com.example.tweetsearch.component.drawer.Drawer
+import com.example.tweetsearch.component.toolbar.AppToolbar
+import com.example.tweetsearch.component.toolbar.SettingToolbar
 import com.example.tweetsearch.screen.Screen
 import com.example.tweetsearch.screen.Screen.Companion.fromRoute
-import com.example.tweetsearch.screen.Setting
-import com.example.tweetsearch.screen.TweetInfoPage
-import com.example.tweetsearch.screen.TweetPreviewPage
+import com.example.tweetsearch.screen.SettingScreen
+import com.example.tweetsearch.screen.TweetInfoScreen
+import com.example.tweetsearch.screen.TweetPreviewScreen
 import com.example.tweetsearch.ui.theme.TweetSearchTheme
-import com.example.tweetsearch.viewmodel.SettingsViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import timber.log.Timber
 import timber.log.Timber.Forest.plant
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+private const val SETTINGS_PREFERENCES_NAME = "settings"
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = SETTINGS_PREFERENCES_NAME)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +44,7 @@ class MainActivity : ComponentActivity() {
         if (BuildConfig.DEBUG) {
             plant(Timber.DebugTree())
         }
+
         setContent {
             TweetSearchApp()
         }
@@ -66,7 +67,7 @@ fun TweetSearchNavigation(
         },
     ) {
         composable(Screen.TweetPreview.name) {
-            TweetPreviewPage(
+            TweetPreviewScreen(
                 Modifier,
                 navController
             )
@@ -80,13 +81,13 @@ fun TweetSearchNavigation(
             ),
         ) { entry ->
             val screenshotModel = entry.arguments?.getString("preview_screenshot_model")
-            TweetInfoPage(
+            TweetInfoScreen(
                 Modifier,
                 screenshotModel,
             )
         }
         composable(Screen.Setting.name) {
-            Setting(Modifier, SettingsViewModel(LocalContext.current.dataStore))
+            SettingScreen(Modifier)
         }
     }
 }
@@ -122,7 +123,9 @@ fun TweetSearchApp() {
                     )
                 }
             },
-            drawerContent = { },
+            drawerContent = {
+                Drawer()
+            },
             drawerBackgroundColor = MaterialTheme.colors.background,
         ) {
             TweetSearchNavigation(navController)

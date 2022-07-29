@@ -1,4 +1,4 @@
-package com.example.tweetsearch.reusable
+package com.example.tweetsearch.component.generic
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Card

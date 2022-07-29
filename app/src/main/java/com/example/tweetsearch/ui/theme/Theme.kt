@@ -5,6 +5,12 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.tweetsearch.data.settings.*
+import com.example.tweetsearch.dataStore
 
 private val LightColorPalette = lightColors(
     primary = Teal700,
@@ -31,8 +37,20 @@ private val DarkColorPalette = darkColors(
 )
 
 @Composable
-fun TweetSearchTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
+fun TweetSearchTheme(content: @Composable () -> Unit) {
+    val settingsViewModel: SettingsViewModel = viewModel(
+        factory = SettingsViewModelFactory(SettingsRepository(LocalContext.current.dataStore))
+    )
+    val settingsPreferences by settingsViewModel.settingsPreferencesFlow.collectAsState(
+        SettingsPreferences()
+    )
+    val darkMode = when (settingsPreferences.darkModeOption) {
+        DarkModeValidOptions.On -> true
+        DarkModeValidOptions.Off -> false
+        DarkModeValidOptions.System -> isSystemInDarkTheme()
+    }
+
+    val colors = if (darkMode) {
         DarkColorPalette
     } else {
         LightColorPalette

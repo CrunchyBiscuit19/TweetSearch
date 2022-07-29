@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.tweetsearch.R
-import com.example.tweetsearch.reusable.HeaderBodyText
+import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.ui.theme.buttonRoundCorners
 import com.example.tweetsearch.ui.theme.defaultModifier
 import com.example.tweetsearch.ui.theme.imageRoundCorners
@@ -31,7 +31,7 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun TweetPreviewPage(
+fun TweetPreviewScreen (
     modifier: Modifier = Modifier,
     navController: NavController
 ) {

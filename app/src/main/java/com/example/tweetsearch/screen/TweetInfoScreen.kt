@@ -5,13 +5,16 @@ import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.webkit.URLUtil
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -23,8 +26,8 @@ import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.tweetsearch.R
-import com.example.tweetsearch.enum.RotationAngles
-import com.example.tweetsearch.reusable.*
+import com.example.tweetsearch.component.generic.*
+import com.example.tweetsearch.data.rotation.RotationAngles
 import com.example.tweetsearch.ui.theme.Shapes
 import com.example.tweetsearch.ui.theme.defaultModifier
 import com.example.tweetsearch.ui.theme.imageRoundCorners
@@ -32,9 +35,13 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 
+@Composable
+fun TweetInfoScreen(modifier: Modifier = Modifier, screenshotModel: String?) {
+    TweetInfo(modifier, screenshotModel)
+}
 
 @Composable
-fun TweetInfoPage(modifier: Modifier = Modifier, screenshotModel: String?) {
+fun TweetInfo(modifier: Modifier = Modifier, screenshotModel: String?) {
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
@@ -116,8 +123,11 @@ fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
             )
         },
         content = {
+
             if (detectedText == null) {
-                CircularProgressIndicator()
+                Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    CircularProgressIndicator(modifier.padding(32.dp))
+                }
             } else if (detectedText != "") {
                 BodyText(defaultModifier, detectedText!!)
             } else if (detectedText == "") {

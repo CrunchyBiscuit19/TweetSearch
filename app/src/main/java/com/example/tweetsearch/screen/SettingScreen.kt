@@ -11,33 +11,39 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.example.tweetsearch.R
-import com.example.tweetsearch.enum.DarkModeValidOptions
-import com.example.tweetsearch.reusable.BodyText
-import com.example.tweetsearch.reusable.HeaderBodyText
+import com.example.tweetsearch.component.generic.BodyText
+import com.example.tweetsearch.component.generic.HeaderBodyText
+import com.example.tweetsearch.data.settings.*
+import com.example.tweetsearch.dataStore
 import com.example.tweetsearch.ui.theme.defaultModifier
-import com.example.tweetsearch.viewmodel.SettingsViewModel
 
 @Composable
-fun Setting(modifier: Modifier = Modifier, settingsViewModel: SettingsViewModel) {
+fun SettingScreen(modifier: Modifier = Modifier) {
+    val settingsViewModel: SettingsViewModel = viewModel(
+        factory = SettingsViewModelFactory(SettingsRepository(LocalContext.current.dataStore))
+    )
+    val settingsPreferences by settingsViewModel.settingsPreferencesFlow.collectAsState(
+        SettingsPreferences()
+    )
+
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState()),
     ) {
         DarkModeSetting(
             modifier,
-            settingsViewModel
-        )
+            settingsPreferences.darkModeOption
+        ) { option -> settingsViewModel.updateDarkMode(option) }
         Divider()
         BodyText(defaultModifier, stringResource(R.string.developer_credit))
     }
@@ -46,21 +52,26 @@ fun Setting(modifier: Modifier = Modifier, settingsViewModel: SettingsViewModel)
 @Composable
 fun DarkModeSetting(
     modifier: Modifier,
-    settingsViewModel: SettingsViewModel,
+    chosenOption: DarkModeValidOptions,
+    updateOption: (DarkModeValidOptions) -> Unit
 ) {
     var settingExpanded by rememberSaveable { mutableStateOf(false) }
-    var chosenOption = settingsViewModel.uiState.darkModeOption
-    var changeOption = settingsViewModel::setDarkModeOption
 
     SettingsMenuLink(
         icon = {
             Icon(
                 imageVector = Icons.Filled.DarkMode,
-                contentDescription = stringResource(R.string.dark_mode_options_icon_description)
+                contentDescription = stringResource(R.string.dark_mode_options_icon_description),
+                tint = MaterialTheme.colors.onBackground
             )
         },
-        title = { Text(stringResource(R.string.dark_mode_setting_name)) },
-        subtitle = { Text(chosenOption.name) },
+        title = {
+            Text(
+                stringResource(R.string.dark_mode_setting_name),
+                color = MaterialTheme.colors.onBackground
+            )
+        },
+        subtitle = { Text(chosenOption.name, color = MaterialTheme.colors.onBackground) },
         modifier = modifier.background(MaterialTheme.colors.background),
         onClick = {
             settingExpanded = true
@@ -80,7 +91,7 @@ fun DarkModeSetting(
                                 .selectable(
                                     selected = (chosenOption == darkModeValidOption),
                                     onClick = {
-                                        changeOption(darkModeValidOption)
+                                        updateOption(darkModeValidOption)
                                     },
                                     role = Role.RadioButton
                                 ),
