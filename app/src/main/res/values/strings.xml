@@ -22,4 +22,17 @@
     <string name="settings_icon_description">Settings menu</string>
     <string name="arrow_back_description">Go back</string>
     <string name="app_icon">TweetSearch Icon</string>
+    <string name="drawer_navigation_title">Navigation</string>
+    <string name="searching_tweets_header">Searching Tweets</string>
+    <string name="source_code_header">Source Code</string>
+    <string name="search_step_download_copy">Download Tweet screenshot or copy the link to the screenshot.</string>
+    <string name="search_step_open_search">Open the \'Search\' page on this app.</string>
+    <string name="search_step_submit">Either select the screenshot, or paste the link and press \'Submit\', then press \'Next\'.</string>
+    <string name="search_step_wait">Wait for screenshot to be analyzed. It will show matching Tweets if suceessful.</string>
+    <string name="search_tip_accuracy">Characters should be at least 16x16 pixels to increase accuracy.</string>
+    <string name="search_tip_information">Include as much information as possible (handle, dates, likes / retweets, etc.).</string>
+    <string name="tweetsearch_repo_url">https://github.com/CrunchyBiscuit19/TweetSearch</string>
+    <string name="source_code_step">Source code for the app can be found at CrunchyBiscuit19/TweetSearch</string>
+    <string name="source_code_repo">CrunchyBiscuit19/TweetSearch</string>
+    <string name="screen_icon_content_description">Screen icon</string>
 </resources>

@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
-import com.example.tweetsearch.component.generic.HeaderBodyText
 
 @Composable
 fun CardHeader(modifier: Modifier = Modifier, title: String, arrowRotationAngle: Float) {

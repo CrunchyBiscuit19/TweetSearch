@@ -25,7 +25,7 @@ import com.example.tweetsearch.component.generic.BodyText
 import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.data.settings.*
 import com.example.tweetsearch.dataStore
-import com.example.tweetsearch.ui.theme.defaultModifier
+import com.example.tweetsearch.ui.theme.defaultTextModifier
 
 @Composable
 fun SettingScreen(modifier: Modifier = Modifier) {
@@ -45,7 +45,7 @@ fun SettingScreen(modifier: Modifier = Modifier) {
             settingsPreferences.darkModeOption
         ) { option -> settingsViewModel.updateDarkMode(option) }
         Divider()
-        BodyText(defaultModifier, stringResource(R.string.developer_credit))
+        BodyText(defaultTextModifier, stringResource(R.string.developer_credit))
     }
 }
 
@@ -102,7 +102,7 @@ fun DarkModeSetting(
                                 onClick = null,
                                 colors = RadioButtonDefaults.colors(MaterialTheme.colors.primary)
                             )
-                            BodyText(defaultModifier, darkModeValidOption.name)
+                            BodyText(defaultTextModifier, darkModeValidOption.name)
                         }
                     }
                 }

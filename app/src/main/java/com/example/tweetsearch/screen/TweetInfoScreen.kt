@@ -29,7 +29,7 @@ import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.*
 import com.example.tweetsearch.data.rotation.RotationAngles
 import com.example.tweetsearch.ui.theme.Shapes
-import com.example.tweetsearch.ui.theme.defaultModifier
+import com.example.tweetsearch.ui.theme.defaultTextModifier
 import com.example.tweetsearch.ui.theme.imageRoundCorners
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -46,11 +46,11 @@ fun TweetInfo(modifier: Modifier = Modifier, screenshotModel: String?) {
         modifier = modifier
             .verticalScroll(rememberScrollState()),
     ) {
-        HeaderBodyText(defaultModifier, stringResource(R.string.screenshot_selected))
+        HeaderBodyText(defaultTextModifier, stringResource(R.string.screenshot_selected))
         AsyncImage(
             model = screenshotModel,
             contentDescription = stringResource(R.string.confirmed_screenshot_model),
-            modifier = defaultModifier
+            modifier = defaultTextModifier
                 .clip(imageRoundCorners)
                 .border(1.dp, MaterialTheme.colors.onBackground),
             contentScale = ContentScale.FillWidth,
@@ -60,7 +60,7 @@ fun TweetInfo(modifier: Modifier = Modifier, screenshotModel: String?) {
         if (screenshotModel != null) {
             TweetOCR(modifier, screenshotModel)
         } else {
-            ErrorBodyText(defaultModifier, stringResource(R.string.image_not_found_error))
+            ErrorBodyText(defaultTextModifier, stringResource(R.string.image_not_found_error))
         }
     }
 }
@@ -109,7 +109,7 @@ fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
     }
 
     ExpandableCard(
-        modifier = defaultModifier,
+        modifier = defaultTextModifier,
         shape = Shapes.medium,
         backgroundColor = MaterialTheme.colors.background,
         elevation = 4.dp,
@@ -129,11 +129,11 @@ fun TweetOCR(modifier: Modifier = Modifier, screenshotModel: String) {
                     CircularProgressIndicator(modifier.padding(32.dp))
                 }
             } else if (detectedText != "") {
-                BodyText(defaultModifier, detectedText!!)
+                BodyText(defaultTextModifier, detectedText!!)
             } else if (detectedText == "") {
-                ErrorBodyText(defaultModifier, stringResource(R.string.no_text_detected_error))
+                ErrorBodyText(defaultTextModifier, stringResource(R.string.no_text_detected_error))
             } else if (detectionError) {
-                ErrorBodyText(defaultModifier, stringResource(R.string.cannot_detect_text_error))
+                ErrorBodyText(defaultTextModifier, stringResource(R.string.cannot_detect_text_error))
             }
         }
     )

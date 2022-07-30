@@ -7,7 +7,6 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import java.io.IOException
 
@@ -20,15 +19,16 @@ class SettingsRepository(private val settingsDataStore: DataStore<Preferences>) 
         val darkModeKey = stringPreferencesKey("dark_mode")
     }
 
-    val settingsPreferencesFlow: Flow<SettingsPreferences> = settingsDataStore.data.catch { exception ->
-        if (exception is IOException) {
-            emit(emptyPreferences())
-        } else {
-            throw exception
+    val settingsPreferencesFlow: Flow<SettingsPreferences> =
+        settingsDataStore.data.catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }.map { preferences ->
+            mapUiPreferences(preferences)
         }
-    }.map { preferences ->
-        mapUiPreferences(preferences)
-    }
 
     suspend fun updateDarkMode(darkModeOption: DarkModeValidOptions) {
         settingsDataStore.edit { preferences ->

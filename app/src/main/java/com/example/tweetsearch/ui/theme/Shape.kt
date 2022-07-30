@@ -15,6 +15,6 @@ val Shapes = Shapes(
 
 val buttonRoundCorners = RoundedCornerShape(20)
 val imageRoundCorners = RoundedCornerShape(5)
-val defaultModifier = Modifier
+val defaultTextModifier = Modifier
     .fillMaxWidth()
     .padding(8.dp)

@@ -25,7 +25,7 @@ import coil.compose.AsyncImage
 import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.ui.theme.buttonRoundCorners
-import com.example.tweetsearch.ui.theme.defaultModifier
+import com.example.tweetsearch.ui.theme.defaultTextModifier
 import com.example.tweetsearch.ui.theme.imageRoundCorners
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -57,7 +57,7 @@ fun TweetPictureSelect(
             .verticalScroll(rememberScrollState()),
     ) {
         HeaderBodyText(
-            defaultModifier,
+            defaultTextModifier,
             stringResource(R.string.select_tweet_screenshot_instruction)
         )
         OutlinedButton(
@@ -66,7 +66,7 @@ fun TweetPictureSelect(
             },
             shape = buttonRoundCorners,
             border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-            modifier = defaultModifier,
+            modifier = defaultTextModifier,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colors.onPrimary,
             )
@@ -97,7 +97,7 @@ fun TweetPictureSelect(
                 onClick = { previewScreenshotModel = screenshotUrl },
                 shape = buttonRoundCorners,
                 border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-                modifier = defaultModifier
+                modifier = defaultTextModifier
                     .weight(0.30F),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = MaterialTheme.colors.onPrimary,
@@ -125,11 +125,11 @@ fun TweetPicturePreview(
         validScreenshot = false
     }
 
-    HeaderBodyText(defaultModifier, stringResource(R.string.preview_screenshot))
+    HeaderBodyText(defaultTextModifier, stringResource(R.string.preview_screenshot))
     AsyncImage(
         model = previewScreenshotModel,
         contentDescription = stringResource(R.string.preview_screenshot),
-        modifier = defaultModifier
+        modifier = defaultTextModifier
             .clip(imageRoundCorners)
             .border(1.dp, MaterialTheme.colors.onBackground),
         contentScale = ContentScale.FillWidth,
@@ -151,7 +151,7 @@ fun TweetPicturePreview(
         },
         shape = buttonRoundCorners,
         border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-        modifier = defaultModifier,
+        modifier = defaultTextModifier,
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = MaterialTheme.colors.secondary,
             contentColor = MaterialTheme.colors.onSecondary,

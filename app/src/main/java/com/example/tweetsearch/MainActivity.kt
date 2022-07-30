@@ -23,11 +23,8 @@ import androidx.navigation.navArgument
 import com.example.tweetsearch.component.drawer.Drawer
 import com.example.tweetsearch.component.toolbar.AppToolbar
 import com.example.tweetsearch.component.toolbar.SettingToolbar
-import com.example.tweetsearch.screen.Screen
+import com.example.tweetsearch.screen.*
 import com.example.tweetsearch.screen.Screen.Companion.fromRoute
-import com.example.tweetsearch.screen.SettingScreen
-import com.example.tweetsearch.screen.TweetInfoScreen
-import com.example.tweetsearch.screen.TweetPreviewScreen
 import com.example.tweetsearch.ui.theme.TweetSearchTheme
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -89,6 +86,9 @@ fun TweetSearchNavigation(
         composable(Screen.Setting.name) {
             SettingScreen(Modifier)
         }
+        composable(Screen.Instruction.name) {
+            InstructionScreen(Modifier)
+        }
     }
 }
 
@@ -97,7 +97,6 @@ fun TweetSearchNavigation(
 @Composable
 fun TweetSearchApp() {
     TweetSearchTheme {
-        val allScreens = Screen.values().toList()
         val navController = rememberAnimatedNavController()
         val backstackEntry = navController.currentBackStackEntryAsState()
         val currentScreen = fromRoute(
@@ -118,13 +117,13 @@ fun TweetSearchApp() {
                 } else {
                     SettingToolbar(
                         Modifier,
-                        Screen.Setting.toolbarTitle,
+                        currentScreen.toolbarTitle,
                         navController
                     )
                 }
             },
             drawerContent = {
-                Drawer()
+                Drawer(Modifier, navController)
             },
             drawerBackgroundColor = MaterialTheme.colors.background,
         ) {
