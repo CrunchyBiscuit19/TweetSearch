@@ -35,6 +35,7 @@ fun SettingScreen(modifier: Modifier = Modifier) {
     val settingsPreferences by settingsViewModel.settingsPreferencesFlow.collectAsState(
         SettingsPreferences()
     )
+    //TODO Switch to collectAsStateLifeCycle if it's possible to fix "Module compiled with different version of Kotlin error"
 
     Column(
         modifier = modifier

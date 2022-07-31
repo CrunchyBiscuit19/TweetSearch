@@ -35,4 +35,5 @@
     <string name="source_code_step">Source code for the app can be found at CrunchyBiscuit19/TweetSearch</string>
     <string name="source_code_repo">CrunchyBiscuit19/TweetSearch</string>
     <string name="screen_icon_content_description">Screen icon</string>
+    <string name="search_tip_limitation">Only tweets published within the last 7 days can be searched.</string>
 </resources>
