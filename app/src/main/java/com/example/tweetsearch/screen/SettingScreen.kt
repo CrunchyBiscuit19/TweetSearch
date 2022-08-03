@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.example.tweetsearch.R
@@ -24,14 +26,15 @@ import com.example.tweetsearch.component.generic.BodyText
 import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.data.setting.*
 import com.example.tweetsearch.dataStore
-import com.example.tweetsearch.ui.theme.defaultTextModifier
+import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun SettingScreen(modifier: Modifier = Modifier) {
     val settingsViewModel: SettingsViewModel = viewModel(
         factory = SettingsViewModelFactory(SettingsRepository(LocalContext.current.dataStore))
     )
-    val settingsPreferences by settingsViewModel.settingsPreferencesFlow.collectAsState(
+    val settingsPreferences by settingsViewModel.settingsPreferencesFlow.collectAsStateWithLifecycle(
         SettingsPreferences()
     )
 
@@ -48,7 +51,7 @@ fun SettingScreen(modifier: Modifier = Modifier) {
             Divider()
         }
         item {
-            BodyText(defaultTextModifier, stringResource(R.string.developer_credit))
+            BodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.developer_credit))
         }
     }
 }
@@ -106,7 +109,7 @@ fun DarkModeSetting(
                                 onClick = null,
                                 colors = RadioButtonDefaults.colors(MaterialTheme.colors.primary)
                             )
-                            BodyText(defaultTextModifier, darkModeValidOption.name)
+                            BodyText(DEFAULT_TEXT_MODIFIER, darkModeValidOption.name)
                         }
                     }
                 }

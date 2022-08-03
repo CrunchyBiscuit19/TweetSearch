@@ -25,9 +25,9 @@ import coil.compose.AsyncImage
 import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
-import com.example.tweetsearch.ui.theme.buttonRoundCorners
-import com.example.tweetsearch.ui.theme.defaultTextModifier
-import com.example.tweetsearch.ui.theme.imageRoundCorners
+import com.example.tweetsearch.ui.theme.BUTTON_ROUND_CORNERS
+import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
+import com.example.tweetsearch.ui.theme.IMAGE_ROUND_CORNERS
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -67,16 +67,16 @@ fun TweetPictureSelect(
     var screenshotUrl by rememberSaveable { mutableStateOf("") }
 
     HeaderBodyText(
-        defaultTextModifier,
+        DEFAULT_TEXT_MODIFIER,
         stringResource(R.string.select_tweet_screenshot_instruction)
     )
     OutlinedButton(
         onClick = {
             selectedFileLauncher.launch("image/*")
         },
-        shape = buttonRoundCorners,
+        shape = BUTTON_ROUND_CORNERS,
         border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-        modifier = defaultTextModifier,
+        modifier = DEFAULT_TEXT_MODIFIER,
         colors = ButtonDefaults.outlinedButtonColors(
             contentColor = MaterialTheme.colors.onPrimary,
         )
@@ -105,9 +105,9 @@ fun TweetPictureSelect(
         )
         OutlinedButton(
             onClick = { onChangePreviewScreenshotModel(screenshotUrl) },
-            shape = buttonRoundCorners,
+            shape = BUTTON_ROUND_CORNERS,
             border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-            modifier = defaultTextModifier
+            modifier = DEFAULT_TEXT_MODIFIER
                 .weight(0.30F),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colors.onPrimary,
@@ -132,14 +132,14 @@ fun TweetPicturePreview(
         validScreenshot = false
     }
 
-    HeaderBodyText(defaultTextModifier, stringResource(R.string.preview_screenshot))
+    HeaderBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.preview_screenshot))
     AsyncImage(
         model = previewScreenshotModel,
         contentDescription = stringResource(R.string.preview_screenshot),
         modifier = modifier
             .fillMaxWidth()
             .padding(DEFAULT_PADDING)
-            .clip(imageRoundCorners),
+            .clip(IMAGE_ROUND_CORNERS),
         contentScale = ContentScale.FillWidth,
         error = painterResource(R.drawable.preview_error),
         fallback = painterResource(R.drawable.preview_placeholder),
@@ -157,9 +157,9 @@ fun TweetPicturePreview(
                 }"
             )
         },
-        shape = buttonRoundCorners,
+        shape = BUTTON_ROUND_CORNERS,
         border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
-        modifier = defaultTextModifier,
+        modifier = DEFAULT_TEXT_MODIFIER,
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = MaterialTheme.colors.secondary,
             contentColor = MaterialTheme.colors.onSecondary,

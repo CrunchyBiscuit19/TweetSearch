@@ -30,16 +30,20 @@ import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.CardHeader
 import com.example.tweetsearch.component.generic.ErrorBodyText
 import com.example.tweetsearch.component.generic.ExpandableCard
+import com.example.tweetsearch.data.api.ApiKeys
+import com.example.tweetsearch.data.api.ApiKeys.Companion.getEnvWithFallback
 import com.example.tweetsearch.data.rotation.RotationAngles
 import com.example.tweetsearch.data.search.SearchCriteriaBuilder
 import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
 import com.example.tweetsearch.ui.theme.Shapes
-import com.example.tweetsearch.ui.theme.defaultTextModifier
-import com.example.tweetsearch.ui.theme.imageRoundCorners
+import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
+import com.example.tweetsearch.ui.theme.IMAGE_ROUND_CORNERS
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.launch
+import twitter4j.TwitterFactory
+import twitter4j.conf.ConfigurationBuilder
 import java.time.LocalDate
 import java.util.Collections.emptyList
 
@@ -58,7 +62,7 @@ fun TweetAnalysisScreen(modifier: Modifier = Modifier, screenshotModel: String?)
             }
         } else {
             item {
-                ErrorBodyText(defaultTextModifier, stringResource(R.string.image_not_found_error))
+                ErrorBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.image_not_found_error))
             }
         }
     }
@@ -74,7 +78,7 @@ fun ScreenshotImage(modifier: Modifier = Modifier, screenshotModel: String?) {
     }
 
     ExpandableCard(
-        modifier = defaultTextModifier,
+        modifier = DEFAULT_TEXT_MODIFIER,
         shape = Shapes.medium,
         backgroundColor = MaterialTheme.colors.background,
         elevation = 4.dp,
@@ -94,7 +98,7 @@ fun ScreenshotImage(modifier: Modifier = Modifier, screenshotModel: String?) {
             modifier = modifier
                 .fillMaxWidth()
                 .padding(DEFAULT_PADDING)
-                .clip(imageRoundCorners),
+                .clip(IMAGE_ROUND_CORNERS),
             contentScale = ContentScale.FillWidth,
             error = painterResource(R.drawable.preview_error),
             fallback = painterResource(R.drawable.preview_placeholder),
@@ -154,7 +158,7 @@ fun ImageOCR(modifier: Modifier = Modifier, screenshotModel: String) {
     }
 
     ExpandableCard(
-        modifier = defaultTextModifier,
+        modifier = DEFAULT_TEXT_MODIFIER,
         shape = Shapes.medium,
         backgroundColor = MaterialTheme.colors.background,
         elevation = 4.dp,
@@ -181,17 +185,17 @@ fun ImageOCR(modifier: Modifier = Modifier, screenshotModel: String) {
         } else if (detectedText != "") {
             TweetDetails(modifier, detectedText!!)
         } else if (detectedText == "") {
-            ErrorBodyText(defaultTextModifier, stringResource(R.string.no_text_detected_error))
+            ErrorBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.no_text_detected_error))
         } else if (detectionError) {
             ErrorBodyText(
-                defaultTextModifier,
+                DEFAULT_TEXT_MODIFIER,
                 stringResource(R.string.ocr_error)
             )
         }
     }
 
     ExpandableCard(
-        modifier = defaultTextModifier,
+        modifier = DEFAULT_TEXT_MODIFIER,
         shape = Shapes.medium,
         backgroundColor = MaterialTheme.colors.background,
         elevation = 4.dp,
@@ -218,10 +222,10 @@ fun ImageOCR(modifier: Modifier = Modifier, screenshotModel: String) {
         } else if (detectedText != "") {
             TweetMatches(modifier, detectedText!!)
         } else if (detectedText == "") {
-            ErrorBodyText(defaultTextModifier, stringResource(R.string.no_text_detected_error))
+            ErrorBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.no_text_detected_error))
         } else if (detectionError) {
             ErrorBodyText(
-                defaultTextModifier,
+                DEFAULT_TEXT_MODIFIER,
                 stringResource(R.string.ocr_error)
             )
         }
@@ -278,5 +282,14 @@ fun TweetDetails(modifier: Modifier = Modifier, detectedText: String) {
 
 @Composable
 fun TweetMatches(modifier: Modifier = Modifier, detectedText: String) {
-    Text(detectedText, modifier)
+    val twitterConfiguration = ConfigurationBuilder()
+        .setJSONStoreEnabled(true)
+        .setOAuthConsumerKey(getEnvWithFallback(ApiKeys.TWITTER_API_KEY.name))
+        .setOAuthConsumerSecret(getEnvWithFallback(ApiKeys.TWITTER_API_KEY_SECRET.name))
+        .setOAuthAccessToken(getEnvWithFallback(ApiKeys.TWITTER_ACCESS_TOKEN.name))
+        .setOAuthAccessTokenSecret(getEnvWithFallback(ApiKeys.TWITTER_ACCESS_TOKEN_SECRET.name))
+        .build()
+    val twitter = TwitterFactory(twitterConfiguration).instance
+
+    Text(getEnvWithFallback(ApiKeys.TWITTER_API_KEY.name), modifier)
 }

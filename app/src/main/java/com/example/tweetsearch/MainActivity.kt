@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
@@ -50,6 +51,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TweetSearchNavigation(
+    modifier: Modifier,
     navController: NavHostController
 ) {
     AnimatedNavHost(
@@ -126,7 +128,7 @@ fun TweetSearchApp() {
             },
             drawerBackgroundColor = MaterialTheme.colors.background,
         ) {
-            TweetSearchNavigation(navController)
+            TweetSearchNavigation(Modifier.padding(it), navController)
         }
     }
 }

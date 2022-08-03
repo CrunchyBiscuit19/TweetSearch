@@ -14,7 +14,7 @@ import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.component.generic.HyperlinkText
 import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
 import com.example.tweetsearch.ui.theme.Typography
-import com.example.tweetsearch.ui.theme.defaultTextModifier
+import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
 
 @Composable
 fun InstructionScreen(modifier: Modifier) {
@@ -46,20 +46,20 @@ fun SearchingTweetsSection(modifier: Modifier) {
     )
 
     HeaderBodyText(
-        defaultTextModifier,
+        DEFAULT_TEXT_MODIFIER,
         stringResource(R.string.searching_tweets_header)
     )
     searchingSteps.forEachIndexed { index, step ->
         Row {
             val number = index + 1
             BodyText(modifier.padding(DEFAULT_PADDING), "$number.")
-            BodyText(defaultTextModifier, step)
+            BodyText(DEFAULT_TEXT_MODIFIER, step)
         }
     }
     searchingTips.forEach { tip ->
         Row {
             BodyText(modifier.padding(DEFAULT_PADDING), "-")
-            BodyText(defaultTextModifier, tip)
+            BodyText(DEFAULT_TEXT_MODIFIER, tip)
         }
     }
 
@@ -72,11 +72,11 @@ fun SourceCodeSection() {
     val sourceCodeStep = "Source code for the app can be found at $sourceCodeRepo."
 
     HeaderBodyText(
-        defaultTextModifier,
+        DEFAULT_TEXT_MODIFIER,
         stringResource(R.string.source_code_header)
     )
     HyperlinkText(
-        defaultTextModifier,
+        DEFAULT_TEXT_MODIFIER,
         fullText = sourceCodeStep,
         fullTextColor = MaterialTheme.colors.onBackground,
         linkText = listOf(sourceCodeRepo),

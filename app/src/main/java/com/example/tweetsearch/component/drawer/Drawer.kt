@@ -23,7 +23,7 @@ import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.BodyText
 import com.example.tweetsearch.component.generic.HeaderBodyText
 import com.example.tweetsearch.screen.Screen
-import com.example.tweetsearch.ui.theme.defaultTextModifier
+import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
 
 @Composable
 fun Drawer(modifier: Modifier = Modifier, navController: NavHostController) {
@@ -57,7 +57,7 @@ fun DrawerWelcome(modifier: Modifier = Modifier) {
 fun DrawerNavigation(modifier: Modifier = Modifier, navController: NavHostController) {
     val allScreens = Screen.values().toList()
 
-    HeaderBodyText(defaultTextModifier, stringResource(R.string.drawer_navigation_title))
+    HeaderBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.drawer_navigation_title))
     Divider(modifier, MaterialTheme.colors.onBackground)
     LazyColumn {
         for (screen in allScreens) {

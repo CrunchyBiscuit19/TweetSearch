@@ -1,5 +1,6 @@
 package com.example.tweetsearch.data.rotation
 
+@Suppress("unused")
 enum class RotationAngles(
     val angle: Float
 ) {
