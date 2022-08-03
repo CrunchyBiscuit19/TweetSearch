@@ -18,8 +18,8 @@ fun ExpandableCard(
     elevation: Dp,
     folded: Boolean,
     header: @Composable () -> Unit,
-    content: @Composable () -> Unit,
     onClick: () -> Unit,
+    content: @Composable () -> Unit,
 ) {
     Card(
         modifier = modifier,

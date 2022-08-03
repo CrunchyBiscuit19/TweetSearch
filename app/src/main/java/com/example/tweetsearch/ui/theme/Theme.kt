@@ -9,7 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.tweetsearch.data.settings.*
+import com.example.tweetsearch.data.setting.*
 import com.example.tweetsearch.dataStore
 
 private val LightColorPalette = lightColors(

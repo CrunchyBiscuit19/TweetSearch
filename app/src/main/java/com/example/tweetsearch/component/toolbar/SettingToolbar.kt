@@ -17,9 +17,8 @@ fun SettingToolbar(
     title: String = stringResource(R.string.placeholder),
     navController: NavHostController,
 ) {
-    val scope = rememberCoroutineScope()
     TopAppBar(
-        title = { Text(title, fontWeight = FontWeight.Bold) },
+        title = { Text(title, modifier, fontWeight = FontWeight.Bold) },
         navigationIcon = {
             IconButton(onClick = {
                 navController.popBackStack()

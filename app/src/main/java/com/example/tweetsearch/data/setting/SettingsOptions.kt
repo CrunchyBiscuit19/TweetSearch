@@ -1,4 +1,4 @@
-package com.example.tweetsearch.data.settings
+package com.example.tweetsearch.data.setting
 
 enum class DarkModeValidOptions {
     On,

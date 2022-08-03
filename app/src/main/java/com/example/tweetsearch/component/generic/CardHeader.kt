@@ -12,18 +12,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.unit.dp
+import com.example.tweetsearch.data.rotation.RotationAngles
+import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
 
 @Composable
-fun CardHeader(modifier: Modifier = Modifier, title: String, arrowRotationAngle: Float) {
+fun CardHeader(modifier: Modifier = Modifier, title: String, arrowRotation: RotationAngles) {
     Row(
         modifier = modifier
-            .padding(8.dp),
+            .padding(DEFAULT_PADDING),
         verticalAlignment = Alignment.CenterVertically
     ) {
         HeaderBodyText(Modifier, title)
         Spacer(Modifier.weight(1f))
         Icon(
-            modifier = modifier.rotate(arrowRotationAngle),
+            modifier = modifier.rotate(arrowRotation.angle),
             imageVector = Icons.Filled.KeyboardArrowDown,
             contentDescription = "Expand / Fold Card Icon",
             tint = MaterialTheme.colors.onBackground,

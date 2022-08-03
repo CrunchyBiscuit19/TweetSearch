@@ -23,7 +23,7 @@ fun AppToolbar(
 ) {
     val scope = rememberCoroutineScope()
     TopAppBar(
-        title = { Text(title, fontWeight = FontWeight.Bold) },
+        title = { Text(title, modifier, fontWeight = FontWeight.Bold) },
         navigationIcon = {
             IconButton(onClick = {
                 scope.launch {

@@ -4,10 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
@@ -23,7 +22,7 @@ import com.alorma.compose.settings.ui.SettingsMenuLink
 import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.BodyText
 import com.example.tweetsearch.component.generic.HeaderBodyText
-import com.example.tweetsearch.data.settings.*
+import com.example.tweetsearch.data.setting.*
 import com.example.tweetsearch.dataStore
 import com.example.tweetsearch.ui.theme.defaultTextModifier
 
@@ -35,18 +34,22 @@ fun SettingScreen(modifier: Modifier = Modifier) {
     val settingsPreferences by settingsViewModel.settingsPreferencesFlow.collectAsState(
         SettingsPreferences()
     )
-    //TODO Switch to collectAsStateLifeCycle if it's possible to fix "Module compiled with different version of Kotlin error"
 
-    Column(
-        modifier = modifier
-            .verticalScroll(rememberScrollState()),
+
+    LazyColumn(
+        modifier
+            .fillMaxWidth()
     ) {
-        DarkModeSetting(
-            modifier,
-            settingsPreferences.darkModeOption
-        ) { option -> settingsViewModel.updateDarkMode(option) }
-        Divider()
-        BodyText(defaultTextModifier, stringResource(R.string.developer_credit))
+        item {
+            DarkModeSetting(
+                modifier,
+                settingsPreferences.darkModeOption
+            ) { option -> settingsViewModel.updateDarkMode(option) }
+            Divider()
+        }
+        item {
+            BodyText(defaultTextModifier, stringResource(R.string.developer_credit))
+        }
     }
 }
 

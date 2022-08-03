@@ -1,7 +1,9 @@
 package com.example.tweetsearch.data.api
 
 enum class API(
-    val api_key: String = "Et6Uo9mdZa7xmGyHMY7VouAQq",
-    val api_secret: String = "B3t37kMXpUTsozyuhjZk6jdUqe6Eax9VQAs8SmJdCiFnl2C9PX",
-    val api_bearer_token: String = "AAAAAAAAAAAAAAAAAAAAAImzfQEAAAAAU%2BD1v1nVZdWs5b8jQyt6IVpZwps%3DBwmZzg0yTRmIAiU3EvahsFEXxyAasAQW2LJj24GnQqXyy2uyId",
+    val key: String = "TvTbMff3OLfZ4tu1ks6toeqaO",
+    val key_secret: String = "0rACLsXJpxCfLsHuOkDiwlUGDUSP3YqMjT5qylef67qbmW3uWI",
+    val bearer_token: String = "AAAAAAAAAAAAAAAAAAAAAImzfQEAAAAAI0D0P%2FTNHgS5VSIKmRzSmSdpqWg%3DM8aWuPbFTBD0gHg47EbzB9m3MDYlhyMCeaooAm20O8fIzeXpag",
+    val access_token: String = "1527205867371671554-aF2wtYWR5SmiDWqaJ07mgNVs9NcQXV",
+    val access_token_secret: String = "JfeUEiQB7lgV1uxqFU7KUiutqOb1WmBcFMvMDk6sX8onB",
 )

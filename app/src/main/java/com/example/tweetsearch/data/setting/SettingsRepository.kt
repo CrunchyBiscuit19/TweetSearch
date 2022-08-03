@@ -1,4 +1,4 @@
-package com.example.tweetsearch.data.settings
+package com.example.tweetsearch.data.setting
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

@@ -41,7 +41,6 @@ class MainActivity : ComponentActivity() {
         if (BuildConfig.DEBUG) {
             plant(Timber.DebugTree())
         }
-
         setContent {
             TweetSearchApp()
         }
@@ -78,7 +77,7 @@ fun TweetSearchNavigation(
             ),
         ) { entry ->
             val screenshotModel = entry.arguments?.getString("preview_screenshot_model")
-            TweetInfoScreen(
+            TweetAnalysisScreen(
                 Modifier,
                 screenshotModel,
             )

@@ -10,11 +10,11 @@
     <string name="toolbar_tweet_screenshot">Tweet Screenshot</string>
     <string name="confirm_screenshot">Confirm</string>
     <string name="confirmed_screenshot_model">Confirmed screenshot</string>
-    <string name="screenshot_selected">Screenshot Selected</string>
+    <string name="screenshot_selected_card_title">Screenshot Selected</string>
     <string name="image_not_found_error">Image cannot be found. Go back and try again.</string>
-    <string name="cannot_detect_text_error">Text cannot be detected. Go back and try again</string>
-    <string name="no_text_detected_error">No text detected. Go back and try again.</string>
-    <string name="text_detection_card_title">Text Detection</string>
+    <string name="ocr_error">Text cannot be detected. Go back and try again</string>
+    <string name="no_text_detected_error">Error in text analysis tool. Go back and try again.</string>
+    <string name="fields_detection_card_title">Fields Detected</string>
     <string name="dark_mode_options_icon_description">Dark Mode Options</string>
     <string name="dark_mode_setting_name">Dark Mode</string>
     <string name="developer_credit">Created by Sim Yue Yang</string>
@@ -30,10 +30,13 @@
     <string name="search_step_submit">Either select the screenshot, or paste the link and press \'Submit\', then press \'Next\'.</string>
     <string name="search_step_wait">Wait for screenshot to be analyzed. It will show matching Tweets if suceessful.</string>
     <string name="search_tip_accuracy">Characters should be at least 16x16 pixels to increase accuracy.</string>
-    <string name="search_tip_information">Include as much information as possible (handle, dates, likes / retweets, etc.).</string>
+    <string name="search_tip_information">Include as much information as possible (handle, dates, etc.).</string>
     <string name="tweetsearch_repo_url">https://github.com/CrunchyBiscuit19/TweetSearch</string>
     <string name="source_code_step">Source code for the app can be found at CrunchyBiscuit19/TweetSearch</string>
     <string name="source_code_repo">CrunchyBiscuit19/TweetSearch</string>
     <string name="screen_icon_content_description">Screen icon</string>
     <string name="search_tip_limitation">Only tweets published within the last 7 days can be searched.</string>
+    <string name="handles_field">Handles</string>
+    <string name="dates_field">Dates</string>
+    <string name="tweet_matches_card_title">Tweet Matches</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.tweetsearch.data.settings
+package com.example.tweetsearch.data.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
