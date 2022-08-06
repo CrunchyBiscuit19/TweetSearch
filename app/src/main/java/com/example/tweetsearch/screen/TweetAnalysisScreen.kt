@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -52,7 +53,6 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.launch
-import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -297,8 +297,8 @@ fun TweetMatches(modifier: Modifier = Modifier, detectedText: String) {
         factory = TwitterApiViewModelFactory(detectedText)
     )
     twitterApiViewModel.searchTweet()
+    val uriHandler = LocalUriHandler.current
 
-    val processedContent = twitterApiViewModel.processedContent.collectAsStateWithLifecycle()
     val tweetMatches = twitterApiViewModel.tweetMatches.collectAsStateWithLifecycle()
     val tweetApiError = twitterApiViewModel.tweetApiError.collectAsStateWithLifecycle()
 
@@ -309,17 +309,22 @@ fun TweetMatches(modifier: Modifier = Modifier, detectedText: String) {
     } else if (tweetMatches.value!!.size == 0) {
         ErrorBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.no_matching_tweets_error))
     } else {
-        tweetMatches.value!!.forEach { (tweet, author) ->
+        tweetMatches.value!!.sortByDescending { (_, _, percentageMatch) ->
+            percentageMatch
+        }
+        tweetMatches.value!!.forEach { (tweet, author, percentageMatch) ->
             Column(
                 modifier
-                    .padding(DEFAULT_PADDING)
+                    .padding(horizontal = DEFAULT_PADDING)
                     .clickable {
-                        //TODO open link in twitter app
-                    }) {
+                        uriHandler.openUri("https://twitter.com/r/status/${tweet.id}")
+                    }
+            ) {
                 Divider()
                 Text(
-                    "${FuzzySearch.tokenSetRatio(processedContent.value, tweet.text)}% Accuracy",
-                    fontStyle = FontStyle.Italic
+                    "$percentageMatch% Accuracy",
+                    fontStyle = FontStyle.Italic,
+                    modifier = modifier.padding(vertical = DEFAULT_PADDING)
                 )
                 Row(
                     modifier
@@ -351,7 +356,8 @@ fun TweetMatches(modifier: Modifier = Modifier, detectedText: String) {
                 }
                 Text(tweet.text)
                 val dateTimeFormat = DateTimeFormatter.ofPattern(TWEET_DATETIME_FORMAT)
-                val tweetCreationDateTime = tweet.createdAt!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                val tweetCreationDateTime =
+                    tweet.createdAt!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                 Text(
                     dateTimeFormat.format(tweetCreationDateTime),
                     modifier.padding(vertical = DEFAULT_PADDING),
@@ -396,6 +402,7 @@ fun TweetMatches(modifier: Modifier = Modifier, detectedText: String) {
                         }
                     }
                 }
+                Spacer(modifier.height(4.dp))
             }
         }
     }

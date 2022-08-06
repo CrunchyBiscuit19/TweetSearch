@@ -7,9 +7,9 @@ import com.example.tweetsearch.data.api.ApiKeys
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import me.xdrop.fuzzywuzzy.FuzzySearch
 import twitter4j.*
 import twitter4j.conf.ConfigurationBuilder
-import java.util.concurrent.ConcurrentHashMap
 
 class TwitterApiViewModel(unparsedTweet: String) : ViewModel() {
     private val twitter: Twitter
@@ -28,7 +28,8 @@ class TwitterApiViewModel(unparsedTweet: String) : ViewModel() {
 
     var processedContent = MutableStateFlow(searchDataHelper.processContent())
 
-    var tweetMatches: MutableStateFlow<ConcurrentHashMap<Tweet, User2>?> = MutableStateFlow(null)
+    var tweetMatches: MutableStateFlow<MutableList<Triple<Tweet, User2, Int>>?> =
+        MutableStateFlow(null)
     val tweetApiError = MutableStateFlow(false)
     fun searchTweet() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,17 +41,20 @@ class TwitterApiViewModel(unparsedTweet: String) : ViewModel() {
                     userFields = "profile_image_url,username",
                 )
                     .let { result ->
+                        // Get the percentage match between the tweet from the API and the tweet processed by OCR
                         // Add the author handle and screenname to each tweet
-                        val tweetMatchesBuffer = ConcurrentHashMap<Tweet, User2>()
+                        val tweetMatchesBuffer = mutableListOf<Triple<Tweet, User2, Int>>()
                         result.tweets.forEach { tweet ->
+                            val percentageMatch =
+                                FuzzySearch.tokenSetRatio(processedContent.value, tweet.text)
                             twitter.getUsers(tweet.authorId!!.toLong()).let {
                                 val author = it.users[0]
-                                tweetMatchesBuffer[tweet] = author
+                                tweetMatchesBuffer.add(Triple(tweet, author, percentageMatch))
                             }
                         }
                         tweetMatches.value = tweetMatchesBuffer
                     }
-            } catch (e:TwitterException) {
+            } catch (e: TwitterException) {
                 tweetApiError.value = true
             }
         }
