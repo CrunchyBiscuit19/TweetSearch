@@ -41,6 +41,7 @@ fun SearchingTweetsSection(modifier: Modifier) {
     )
     val searchingTips = listOf(
         stringResource(R.string.search_tip_accuracy),
+        stringResource(R.string.search_tip_crop),
         stringResource(R.string.search_tip_information),
         stringResource(R.string.search_tip_limitation)
     )

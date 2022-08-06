@@ -3,14 +3,19 @@ package com.example.tweetsearch.screen
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.icu.text.CompactDecimalFormat
+import android.icu.util.ULocale
 import android.net.Uri
 import android.webkit.URLUtil
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Comment
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Repeat
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -20,9 +25,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -30,22 +39,26 @@ import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.CardHeader
 import com.example.tweetsearch.component.generic.ErrorBodyText
 import com.example.tweetsearch.component.generic.ExpandableCard
-import com.example.tweetsearch.data.api.ApiKeys
-import com.example.tweetsearch.data.api.ApiKeys.Companion.getEnvWithFallback
 import com.example.tweetsearch.data.rotation.RotationAngles
-import com.example.tweetsearch.data.search.SearchCriteriaBuilder
+import com.example.tweetsearch.data.search.SearchDataHelper
+import com.example.tweetsearch.data.search.TweetMetricUI
+import com.example.tweetsearch.data.search.TwitterApiViewModel
+import com.example.tweetsearch.data.search.TwitterApiViewModelFactory
 import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
-import com.example.tweetsearch.ui.theme.Shapes
 import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
 import com.example.tweetsearch.ui.theme.IMAGE_ROUND_CORNERS
+import com.example.tweetsearch.ui.theme.Shapes
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.launch
-import twitter4j.TwitterFactory
-import twitter4j.conf.ConfigurationBuilder
+import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.Collections.emptyList
+
+const val TWEET_DATETIME_FORMAT = "dd MMM yyyy HH:mm"
 
 @Composable
 fun TweetAnalysisScreen(modifier: Modifier = Modifier, screenshotModel: String?) {
@@ -103,6 +116,19 @@ fun ScreenshotImage(modifier: Modifier = Modifier, screenshotModel: String?) {
             error = painterResource(R.drawable.preview_error),
             fallback = painterResource(R.drawable.preview_placeholder),
         )
+    }
+}
+
+@Composable
+fun LoadingCircle(modifier: Modifier = Modifier) {
+    Row(
+        modifier
+            .fillMaxWidth()
+            .height(150.dp),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        CircularProgressIndicator()
     }
 }
 
@@ -173,15 +199,7 @@ fun ImageOCR(modifier: Modifier = Modifier, screenshotModel: String) {
         },
     ) {
         if (detectedText == null) {
-            Row(
-                modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CircularProgressIndicator()
-            }
+            LoadingCircle()
         } else if (detectedText != "") {
             TweetDetails(modifier, detectedText!!)
         } else if (detectedText == "") {
@@ -210,15 +228,7 @@ fun ImageOCR(modifier: Modifier = Modifier, screenshotModel: String) {
         },
     ) {
         if (detectedText == null) {
-            Row(
-                modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                CircularProgressIndicator()
-            }
+            LoadingCircle()
         } else if (detectedText != "") {
             TweetMatches(modifier, detectedText!!)
         } else if (detectedText == "") {
@@ -235,15 +245,15 @@ fun ImageOCR(modifier: Modifier = Modifier, screenshotModel: String) {
 @SuppressLint("MutableCollectionMutableState")
 @Composable
 fun TweetDetails(modifier: Modifier = Modifier, detectedText: String) {
-    val searchCriteriaBuilder = SearchCriteriaBuilder(detectedText)
+    val searchDataBuilder = SearchDataHelper(detectedText)
     var allHandles by rememberSaveable { mutableStateOf(emptyList<String>()) }
     var allDates by rememberSaveable { mutableStateOf(emptyList<LocalDate>()) }
 
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            allHandles = searchCriteriaBuilder.findHandles(detectedText)
-            allDates = searchCriteriaBuilder.findDates(detectedText)
+            allHandles = searchDataBuilder.processHandles()
+            allDates = searchDataBuilder.processDates()
         }
     }
 
@@ -280,16 +290,113 @@ fun TweetDetails(modifier: Modifier = Modifier, detectedText: String) {
     }
 }
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun TweetMatches(modifier: Modifier = Modifier, detectedText: String) {
-    val twitterConfiguration = ConfigurationBuilder()
-        .setJSONStoreEnabled(true)
-        .setOAuthConsumerKey(getEnvWithFallback(ApiKeys.TWITTER_API_KEY.name))
-        .setOAuthConsumerSecret(getEnvWithFallback(ApiKeys.TWITTER_API_KEY_SECRET.name))
-        .setOAuthAccessToken(getEnvWithFallback(ApiKeys.TWITTER_ACCESS_TOKEN.name))
-        .setOAuthAccessTokenSecret(getEnvWithFallback(ApiKeys.TWITTER_ACCESS_TOKEN_SECRET.name))
-        .build()
-    val twitter = TwitterFactory(twitterConfiguration).instance
+    val twitterApiViewModel: TwitterApiViewModel = viewModel(
+        factory = TwitterApiViewModelFactory(detectedText)
+    )
+    twitterApiViewModel.searchTweet()
 
-    Text(getEnvWithFallback(ApiKeys.TWITTER_API_KEY.name), modifier)
+    val processedContent = twitterApiViewModel.processedContent.collectAsStateWithLifecycle()
+    val tweetMatches = twitterApiViewModel.tweetMatches.collectAsStateWithLifecycle()
+    val tweetApiError = twitterApiViewModel.tweetApiError.collectAsStateWithLifecycle()
+
+    if (tweetApiError.value) {
+        ErrorBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.network_error))
+    } else if (tweetMatches.value == null) {
+        LoadingCircle()
+    } else if (tweetMatches.value!!.size == 0) {
+        ErrorBodyText(DEFAULT_TEXT_MODIFIER, stringResource(R.string.no_matching_tweets_error))
+    } else {
+        tweetMatches.value!!.forEach { (tweet, author) ->
+            Column(
+                modifier
+                    .padding(DEFAULT_PADDING)
+                    .clickable {
+                        //TODO open link in twitter app
+                    }) {
+                Divider()
+                Text(
+                    "${FuzzySearch.tokenSetRatio(processedContent.value, tweet.text)}% Accuracy",
+                    fontStyle = FontStyle.Italic
+                )
+                Row(
+                    modifier
+                        .fillMaxWidth()
+                ) {
+                    AsyncImage(
+                        model = author.profileImageUrl,
+                        modifier = modifier
+                            .padding(vertical = DEFAULT_PADDING)
+                            .clip(CircleShape)
+                            .fillMaxWidth()
+                            .weight(1.5F),
+                        contentDescription = stringResource(R.string.tweet_author_profile_picture),
+                        contentScale = ContentScale.FillWidth,
+                        error = painterResource(R.drawable.preview_error)
+                    )
+                    Column(
+                        modifier
+                            .padding(DEFAULT_PADDING)
+                            .weight(9F)
+                    ) {
+                        Text(author.name, fontWeight = FontWeight.Bold)
+                        Text(
+                            "@${author.screenName}",
+                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.subtitle2
+                        )
+                    }
+                }
+                Text(tweet.text)
+                val dateTimeFormat = DateTimeFormatter.ofPattern(TWEET_DATETIME_FORMAT)
+                val tweetCreationDateTime = tweet.createdAt!!.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+                Text(
+                    dateTimeFormat.format(tweetCreationDateTime),
+                    modifier.padding(vertical = DEFAULT_PADDING),
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.subtitle2
+                )
+                Row(
+                    modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    val compactDecimalFormat = CompactDecimalFormat.getInstance(
+                        ULocale.getDefault(),
+                        CompactDecimalFormat.CompactStyle.SHORT
+                    )
+                    val publicMetrics = tweet.publicMetrics!!
+                    val tweetMetrics = listOf(
+                        TweetMetricUI(
+                            publicMetrics.likeCount,
+                            Icons.Outlined.FavoriteBorder,
+                            stringResource(R.string.twitter_like_description)
+                        ),
+                        TweetMetricUI(
+                            publicMetrics.replyCount,
+                            Icons.Outlined.Comment,
+                            stringResource(R.string.twitter_reply_description)
+                        ),
+                        TweetMetricUI(
+                            publicMetrics.retweetCount,
+                            Icons.Outlined.Repeat,
+                            stringResource(R.string.twitter_retweet_description)
+                        ),
+                    )
+                    tweetMetrics.forEach {
+                        Row(modifier.padding(horizontal = 2.dp)) {
+                            Text(compactDecimalFormat.format(it.number))
+                            Icon(
+                                it.icon,
+                                contentDescription = it.description,
+                                modifier.padding(horizontal = 1.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

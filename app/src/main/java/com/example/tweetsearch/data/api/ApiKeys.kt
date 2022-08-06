@@ -1,16 +1,12 @@
 package com.example.tweetsearch.data.api
 
 @Suppress("unused")
-enum class ApiKeys {
-    TWITTER_API_KEY,
-    TWITTER_API_KEY_SECRET,
-    TWITTER_BEARER_TOKEN,
-    TWITTER_ACCESS_TOKEN,
-    TWITTER_ACCESS_TOKEN_SECRET;
-
-    companion object {
-        fun getEnvWithFallback(envVariable: String, fallback: String = envVariable): String {
-            return System.getenv(envVariable).takeUnless { it.isNullOrEmpty() } ?: fallback
-        }
-    }
+enum class ApiKeys(
+    val key: String,
+) {
+    TWITTER_API_KEY("TvTbMff3OLfZ4tu1ks6toeqaO"),
+    TWITTER_API_KEY_SECRET("0rACLsXJpxCfLsHuOkDiwlUGDUSP3YqMjT5qylef67qbmW3uWI"),
+    TWITTER_BEARER_TOKEN("AAAAAAAAAAAAAAAAAAAAAImzfQEAAAAAI0D0P%2FTNHgS5VSIKmRzSmSdpqWg%3DM8aWuPbFTBD0gHg47EbzB9m3MDYlhyMCeaooAm20O8fIzeXpag"),
+    TWITTER_ACCESS_TOKEN("1527205867371671554-aF2wtYWR5SmiDWqaJ07mgNVs9NcQXV"),
+    TWITTER_ACCESS_TOKEN_SECRET("JfeUEiQB7lgV1uxqFU7KUiutqOb1WmBcFMvMDk6sX8onB");
 }

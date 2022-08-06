@@ -3,6 +3,7 @@ package com.example.tweetsearch.data.setting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
@@ -11,7 +12,7 @@ class SettingsViewModel(
     val settingsPreferencesFlow = settingsRepository.settingsPreferencesFlow
 
     fun updateDarkMode (darkModeOption: DarkModeValidOptions) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             settingsRepository.updateDarkMode(darkModeOption)
         }
     }

@@ -5,23 +5,44 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.*
 
-data class SearchCriteria(
-    val handle: String,
-    val date: LocalDate,
-    val content: String
-)
+const val TWITTER_MAX_QUERY_LENGTH = 512
 
-class SearchCriteriaBuilder(private val unparsedTweet: String) {
+data class SearchData(
+    val handle: String?,
+    val content: String,
+) {
+    fun generateQuery(): String {
+        val handlePart = "from:${handle.toString().replace("@", "")}"
+        val contentPart = content
+            .trim()
+            .split(" ")
+            .filter {
+                it.length > 3
+            }
+            .joinToString(" OR ", prefix = "(")
+        return "${("$handlePart $contentPart").take(TWITTER_MAX_QUERY_LENGTH - 1)})"
+    }
+}
 
-    fun findHandles(unparsedTweet: String): List<String> {
+class SearchDataHelper(unparsedTweet: String) {
+    private val unparsedContent = unparsedTweet
+
+    fun createSearchData(): SearchData {
+        return SearchData(
+            handle = if (processHandles().isEmpty()) null else processHandles()[0],
+            content = processContent()
+        )
+    }
+
+    fun processHandles(): List<String> {
         val handleRegex = Regex("@[A-Za-z0-9_]{4,15}")
-        return handleRegex.findAll(unparsedTweet).toList().map { result ->
+        return handleRegex.findAll(unparsedContent).toList().map { result ->
             result.value
         }.distinct()
     }
 
-    fun findDates(unparsedTweet: String): List<LocalDate> {
-        val dates = mutableListOf<LocalDate>()
+    fun processDates(): List<LocalDate?> {
+        val dates = mutableListOf<LocalDate?>()
         val dateRegexes = mapOf(
             "d/M/yy" to Regex("\\d/\\d/\\d{2}"),                                // 2/2/18
             "dd/MM/yy" to Regex("\\d{2}/\\d{2}/\\d{2}"),                        // 02/02/18
@@ -34,29 +55,27 @@ class SearchCriteriaBuilder(private val unparsedTweet: String) {
             "MMM d, yyyy" to Regex("[A-Za-z]{3}\\s?\\d{1,2},\\s?\\d{4}"),       // Feb 2, 2018
             "MMM dd, yyyy" to Regex("[A-Za-z]{3}\\s?\\d{1,2},\\s?\\d{4}"),      // Feb 02, 2018
         )
-        val placeholderDate = LocalDate.of(1970, 1, 1)
         dateRegexes.forEach { (dateFormat, dateRegex) ->
-            dates += dateRegex.findAll(unparsedTweet).toList().map { result ->
+            dates += dateRegex.findAll(unparsedContent).toList().map { result ->
                 try {
                     LocalDate.parse(
                         result.value,
                         DateTimeFormatter.ofPattern(dateFormat, Locale.US)
                     )
                 } catch (e: DateTimeParseException) {
-                    placeholderDate
+                    null
                 }
             }
         }
-        return dates.distinct().sorted()
-            .filterNot { it.year == 1970 && it.monthValue == 1 && it.dayOfMonth == 1 }
+        return dates.distinct().filterIsInstance<LocalDate>()
     }
 
-    fun processContent(unparsedTweet: String): String {
+    fun processContent(): String {
         val noSpecialCharsRegex = Regex("[^A-Za-z \\n]+")
         val newlinesRegex = Regex("\n+")
         val multipleSpacesRegex = Regex(" +")
 
-        return unparsedTweet
+        return unparsedContent
             .replace(noSpecialCharsRegex, " ")
             .replace(newlinesRegex, " ")
             .replace(multipleSpacesRegex, " ")

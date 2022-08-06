@@ -12,8 +12,8 @@
     <string name="confirmed_screenshot_model">Confirmed screenshot</string>
     <string name="screenshot_selected_card_title">Screenshot Selected</string>
     <string name="image_not_found_error">Image cannot be found. Go back and try again.</string>
-    <string name="ocr_error">Text cannot be detected. Go back and try again</string>
-    <string name="no_text_detected_error">Error in text analysis tool. Go back and try again.</string>
+    <string name="ocr_error">Error in text analysis tool. Go back and try again.</string>
+    <string name="no_text_detected_error">No text can be detected. Go back and try again.</string>
     <string name="fields_detection_card_title">Fields Detected</string>
     <string name="dark_mode_options_icon_description">Dark Mode Options</string>
     <string name="dark_mode_setting_name">Dark Mode</string>
@@ -39,4 +39,11 @@
     <string name="handles_field">Handles</string>
     <string name="dates_field">Dates</string>
     <string name="tweet_matches_card_title">Tweet Matches</string>
+    <string name="search_tip_crop">Make sure to properly crop the tweet screenshot so excess information is not shown</string>
+    <string name="tweet_author_profile_picture">Tweet author profile picture</string>
+    <string name="no_matching_tweets_error">No matching tweets found for image.</string>
+    <string name="network_error">Network error occurred.</string>
+    <string name="twitter_like_description">Twitter like button</string>
+    <string name="twitter_reply_description">Twitter reply button</string>
+    <string name="twitter_retweet_description">Twitter retweet button</string>
 </resources>
