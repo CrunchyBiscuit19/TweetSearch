@@ -1,4 +1,4 @@
-package com.example.tweetsearch
+package com.yueyang.tweetsearch
 
 import org.junit.Test
 

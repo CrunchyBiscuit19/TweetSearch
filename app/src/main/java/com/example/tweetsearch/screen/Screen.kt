@@ -1,10 +1,7 @@
 package com.example.tweetsearch.screen
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Description
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class Screen(
@@ -22,6 +19,11 @@ enum class Screen(
         toolbarTitle = "Screenshot Info",
         accessedViaDrawer = false,
     ),
+    SearchHistory(
+        toolbarTitle = "Search History",
+        drawerTitle = "History",
+        icon = Icons.Filled.History,
+    ),
     Setting(
         toolbarTitle = "Settings",
         icon = Icons.Filled.Settings
@@ -36,6 +38,7 @@ enum class Screen(
             when (route?.substringBefore("/")) {
                 TweetPreview.name -> TweetPreview
                 TweetInfo.name -> TweetInfo
+                SearchHistory.name -> SearchHistory
                 Setting.name -> Setting
                 Instruction.name -> Instruction
                 null -> TweetPreview

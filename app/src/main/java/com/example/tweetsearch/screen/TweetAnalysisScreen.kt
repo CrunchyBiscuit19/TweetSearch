@@ -11,7 +11,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -40,6 +43,7 @@ import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.CardHeader
 import com.example.tweetsearch.component.generic.ErrorBodyText
 import com.example.tweetsearch.component.generic.ExpandableCard
+import com.example.tweetsearch.component.generic.LoadingCircle
 import com.example.tweetsearch.data.rotation.RotationAngles
 import com.example.tweetsearch.data.search.SearchDataHelper
 import com.example.tweetsearch.data.search.TweetMetricUI
@@ -116,19 +120,6 @@ fun ScreenshotImage(modifier: Modifier = Modifier, screenshotModel: String?) {
             error = painterResource(R.drawable.preview_error),
             fallback = painterResource(R.drawable.preview_placeholder),
         )
-    }
-}
-
-@Composable
-fun LoadingCircle(modifier: Modifier = Modifier) {
-    Row(
-        modifier
-            .fillMaxWidth()
-            .height(150.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        CircularProgressIndicator()
     }
 }
 

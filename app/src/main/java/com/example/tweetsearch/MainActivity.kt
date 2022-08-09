@@ -84,6 +84,9 @@ fun TweetSearchNavigation(
                 screenshotModel,
             )
         }
+        composable(Screen.SearchHistory.name) {
+            SearchHistoryScreen(Modifier, navController)
+        }
         composable(Screen.Setting.name) {
             SettingScreen(Modifier)
         }

@@ -38,7 +38,6 @@ fun SettingScreen(modifier: Modifier = Modifier) {
         SettingsPreferences()
     )
 
-
     LazyColumn(
         modifier
             .fillMaxWidth()

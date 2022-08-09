@@ -46,4 +46,10 @@
     <string name="twitter_like_description">Twitter like button</string>
     <string name="twitter_reply_description">Twitter reply button</string>
     <string name="twitter_retweet_description">Twitter retweet button</string>
+    <string name="enter_query">Enter Query</string>
+    <string name="copy_path_button">Copy search history path</string>
+    <string name="empty_history">No history records found. Go use the search function.</string>
+    <string name="delete_confirmation_dialog_title">Delete History</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

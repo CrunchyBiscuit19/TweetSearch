@@ -1,5 +1,6 @@
 package com.example.tweetsearch.screen
 
+import android.app.Application
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,25 +18,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.tweetsearch.R
 import com.example.tweetsearch.component.generic.HeaderBodyText
-import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
+import com.example.tweetsearch.data.history.History
+import com.example.tweetsearch.data.history.HistoryViewModel
+import com.example.tweetsearch.data.history.HistoryViewModelFactory
 import com.example.tweetsearch.ui.theme.BUTTON_ROUND_CORNERS
+import com.example.tweetsearch.ui.theme.DEFAULT_PADDING
 import com.example.tweetsearch.ui.theme.DEFAULT_TEXT_MODIFIER
 import com.example.tweetsearch.ui.theme.IMAGE_ROUND_CORNERS
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
 
 @Composable
 fun TweetPreviewScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    val historyViewModel: HistoryViewModel = viewModel(
+        factory = HistoryViewModelFactory(LocalContext.current.applicationContext as Application)
+    )
     var previewScreenshotModel: String? by rememberSaveable { mutableStateOf(null) }
 
     LazyColumn(
@@ -48,7 +58,7 @@ fun TweetPreviewScreen(
             }
         }
         item {
-            TweetPicturePreview(modifier, navController, previewScreenshotModel)
+            TweetPicturePreview(modifier, navController, previewScreenshotModel, historyViewModel)
         }
     }
 }
@@ -126,6 +136,7 @@ fun TweetPicturePreview(
     modifier: Modifier = Modifier,
     navController: NavController,
     previewScreenshotModel: String?,
+    historyViewModel: HistoryViewModel,
 ) {
     var validScreenshot by rememberSaveable { mutableStateOf(false) }
     if (previewScreenshotModel == null) {
@@ -140,7 +151,7 @@ fun TweetPicturePreview(
             .fillMaxWidth()
             .padding(DEFAULT_PADDING)
             .clip(IMAGE_ROUND_CORNERS),
-        contentScale = ContentScale.FillWidth,
+        contentScale = ContentScale.Crop,
         error = painterResource(R.drawable.preview_error),
         fallback = painterResource(R.drawable.preview_placeholder),
         onSuccess = { validScreenshot = true },
@@ -156,6 +167,11 @@ fun TweetPicturePreview(
                     )
                 }"
             )
+            historyViewModel.insertHistory(History(
+                fullPath = previewScreenshotModel.toString(),
+                shortPath = History.shortPathFromFull(previewScreenshotModel.toString()),
+                accessedTime = LocalDateTime.now()
+            ))
         },
         shape = BUTTON_ROUND_CORNERS,
         border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
